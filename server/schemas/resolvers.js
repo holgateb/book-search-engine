@@ -37,23 +37,28 @@ const resolvers = {
     },
     saveBook: async (parent, { bookBannana }, context) => {
       if (context.user) {
-        return await User.findOneAndUpdate(
+        const user= await User.findOneAndUpdate(
           { _id: context.user._id },
           {
             $push: { savedBooks: bookBannana },
           }
-        );
+        )
+
+        return user
       }
+      throw new AuthenticationError("Incorrect credentials");
     },
     removeBook: async (parent, { bookId }, context) => {
       if (context.user) {
-        return await User.findOneAndUpdate(
+        const user = await User.findOneAndUpdate(
           { _id: context.user._id },
           {
             $pull: { savedBooks: {bookId}}
           }
         )
+        return user
       }
+      throw new AuthenticationError("Incorrect credentials");
     },
   },
 };
